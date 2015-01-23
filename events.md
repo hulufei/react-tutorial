@@ -26,10 +26,23 @@ delegation）的方式绑定到组件最上层，并且在组件卸载（unmount
 比如你在 `componentDidMount` 方法里面通过 `addEventListener`
 绑定的事件就是浏览器原生事件。
 
-使用原生事件的时候注意在 `componentWillUnmount` 的时候 `removeEventListener`。
+使用原生事件的时候注意在 `componentWillUnmount` 解除绑定 `removeEventListener`。
 
 所有通过 JSX
 这种方式绑定的事件都是绑定到“合成事件”，除非你有特别的理由，建议总是用 React
 的方式处理事件。
+
+## 参数传递
+
+给事件处理函数传递额外参数的方式：`bind(this, arg1, arg2, ...)`
+
+```javascript
+render: function() {
+	return <p onClick={this.handleClick.bind(this, 'extra param')}>;
+},
+handleClick: function(param, event) {
+	// handle click
+}
+```
 
 [React 支持的事件列表](http://facebook.github.io/react/docs/events.html)

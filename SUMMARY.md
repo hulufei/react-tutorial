@@ -17,7 +17,7 @@ React 入门指南
   - [组件间通信](component-communicate.md)
   - [Mixins](mixin.md)
 - [Data Flow](data-flow.md)
-  - Flux
+  - [Flux](flux.md)
   - Reflux
 - [表单](forms.md)
 - [动画]
