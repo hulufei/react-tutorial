@@ -1,6 +1,6 @@
 # 事件处理
 
-{{ ./share/simple-component.md }}
+{% include './share/simple-component.md' %}
 
 可以看到 React 里面绑定事件的方式和在 HTML
 中绑定事件类似，使用驼峰式命名指定要绑定的 `onClick` 属性为组件定义的一个方法 `{this.handleClick}`。

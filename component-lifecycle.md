@@ -3,7 +3,7 @@
 一个组件类必须由调用 `React.createClass` 创建，并且提供一个 `render`
 方法以及其他可选的生命周期函数、组件相关的事件或方法定义。
 
-{{ ./share/simple-component.md }}
+{% include './share/simple-component.md' %}
 
 ## `getInitialState`
 
