@@ -1,5 +1,13 @@
 # Mixins
 
+**NOTE**: 使用 ES6 class 定义的组件已经不支持 mixin 了，因为使用 mixin
+的场景都可以用组合组件这种模式来做到，参见 [Mixins Are Dead. Long Live
+Composition](https://medium.com/@dan_abramov/mixins-are-dead-long-live-higher-order-components-94a0d2f9e750#.xe4ubc7lu)
+
+这里暂时留存这部分内容。
+
+<hr/>
+
 虽然组件的原则就是模块化，彼此之间相互独立，但是有时候不同的组件之间可能会共用一些功能，共享一部分代码。所以 React
 提供了 `mixins` 这种方式来处理这种问题。
 

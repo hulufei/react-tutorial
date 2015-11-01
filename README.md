@@ -15,3 +15,5 @@ JSX 这种存在的偏见去尝试一下。
 因为官方文档组织得比较散乱，希望本教程能成为一个不错的入门参考。
 
 有任何问题 → [Github](https://github.com/hulufei/react-tutorial)
+
+本文档对应 React v0.14.x，使用 ES6。

@@ -5,45 +5,42 @@
 在 React 组件中要包含其他组件作为子组件，只需要把组件当作一个 DOM
 元素引入就可以了。
 
-一个例子，一个显示用户头像的组件 `Avatar` 包含两个子组件 `ProfilePic` 显示用户头像和 `ProfileLink` 显示用户链接：
+一个例子：一个显示用户头像的组件 `Avatar` 包含两个子组件 `ProfilePic` 显示用户头像和 `ProfileLink` 显示用户链接：
 
 ```javascript
-var Avatar = React.createClass({
-	render: function() {
-		return (
-			<div>
-				<ProfilePic username={this.props.username} />
-				<ProfileLink username={this.props.username} />
-			</div>
-		);
-	}
-});
+import React from 'react';
+import { render } from 'react-dom';
 
-var ProfilePic = React.createClass({
-	render: function() {
-		return (
-			<img src={'http://graph.facebook.com/' + this.props.username + '/picture'} />
-		);
-	}
-});
+const ProfilePic = (props) => {
+  return (
+    <img src={'http://graph.facebook.com/' + props.username + '/picture'} />
+  );
+}
 
-var ProfileLink = React.createClass({
-	render: function() {
-		return (
-			<a href={'http://www.facebook.com/' + this.props.username}>
-				{this.props.username}
-			</a>
-		);
-	}
-});
+const ProfileLink = (props) => {
+  return (
+    <a href={'http://www.facebook.com/' + props.username}>
+      {props.username}
+    </a>
+  );
+}
 
-React.render(
-	<Avatar username="pwh" />,
-	document.getElementById('example')
+const Avatar = (props) => {
+  return (
+    <div>
+      <ProfilePic username={props.username} />
+      <ProfileLink username={props.username} />
+    </div>
+  );
+}
+
+render(
+  <Avatar username="pwh" />,
+  document.getElementById('example')
 );
 ```
 
-通过子组件的属性传入设置相应的 `props` 值。
+通过 `props` 传递值。
 
 ## 循环插入子元素
 
@@ -54,54 +51,46 @@ React.render(
 `key` 必须直接在循环中设置：
 
 ```javascript
-var ListItemWrapper = React.createClass({
-	render: function() {
-		return <li>{this.props.data.text}</li>;
-	}
-});
-var MyComponent = React.createClass({
-	render: function() {
-		return (
-			<ul>
-				{this.props.results.map(function(result) {
-					return <ListItemWrapper key={result.id} data={result}/>;
-				})}
-			</ul>
-		);
-	}
-});
+const ListItemWrapper = (props) => <li>{props.data.text}</li>;
+
+const MyComponent = (props) => {
+  return (
+    <ul>
+      {props.results.map((result) => {
+        return <ListItemWrapper key={result.id} data={result}/>;
+      })}
+    </ul>
+  );
+}
 ```
 
-你也可以用一个 `key` 值作为属性，子元素作为属性值的对象字面量来显示子元素列表，但是在这种情况下要注意生成的子元素重新渲染后在 DOM 中显示的顺序问题。
+你也可以用一个 `key` 值作为属性，子元素作为属性值的对象字面量来显示子元素列表，虽然这种用法的场景有限，参见[Keyed Fragments](http://facebook.github.io/react/docs/create-fragment.html)，但是在这种情况下要注意生成的子元素重新渲染后在 DOM 中显示的顺序问题。
 
 实际上浏览器在遍历一个字面量对象的时候会保持顺序一致，除非存在属性值可以被转换成整数值，这种属性值会排序并放在其他属性之前被遍历到，所以为了防止这种情况发生，可以在构建这个字面量的时候在
 `key` 值前面加字符串前缀，比如：
 
 ```javascript
-render: function() {
-	var items = {};
+render() {
+  var items = {};
 
-	this.props.results.forEach(function(result) {
-		// If result.id can look like a number (consider short hashes), then
-		// object iteration order is not guaranteed. In this case, we add a prefix
-		// to ensure the keys are strings.
-		items['result-' + result.id] = <li>{result.text}</li>;
-	});
+  this.props.results.forEach((result) => {
+    // If result.id can look like a number (consider short hashes), then
+    // object iteration order is not guaranteed. In this case, we add a prefix
+    // to ensure the keys are strings.
+    items['result-' + result.id] = <li>{result.text}</li>;
+  });
 
-	return (
-		<ol>
-			{items}
-		</ol>
+  return (
+    <ol>
+      {items}
+    </ol>
    );
 }
 ```
 
 ## `this.props.children`
 
-在初始化加载一个组件实例的时候，额外写在这个组件标签里面的 React 组件、其他 HTML
-元素或者 JS 表达式，这些子元素可以通过 `this.props.children`
-在组件里面获取到。注意**不是**指组件定义的 `render` 生成的这个组件的 HTML
-结构包含的子元素。
+组件标签里面包含的子元素会通过 `props.children` 传递进来。
 
 比如：
 
@@ -111,11 +100,16 @@ React.render(<Parent><Child /></Parent>, document.body);
 React.render(<Parent><span>hello</span>{'world'}</Parent>, document.body);
 ```
 
-HTML 元素会作为 React 组件对象、JS 表达式结果是一个文字节点，都会存入 `Parent` 组件的 `props.children`
-。
+HTML 元素会作为 React 组件对象、JS 表达式结果是一个文字节点，都会存入 `Parent` 组件的 `props.children`。
 
-`this.props.children`
-通常是一个组件对象的数组，但是当只有一个子元素的时候，`this.props.children`
+一般来说，可以直接将这个属性作为父组件的子元素 render：
+
+```javascript
+const Parent = (props) => <div>{props.children}</div>;
+```
+
+`props.children`
+通常是一个组件对象的数组，但是当只有一个子元素的时候，`props.children`
 将是这个唯一的子元素，而不是数组了。
 
 

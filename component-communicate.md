@@ -2,42 +2,36 @@
 
 ## 父子组件间通信
 
-这种情况下很简单，就是通过 `props`
-属性传递，在父组件设置子组件的属性，所以子组件就可以通过 `props`
-或者事件绑定
-访问到父组件的方法，这样就搭建起了父子组件间通信的桥梁。
-
-_这种将数据属性从父级往下传递的方式就是 React 里面的 Data
-Flow（”单向数据流“），之后会进一步介绍。_
+这种情况下很简单，就是通过 `props` 属性传递，在父组件给子组件设置 `props`，然后子组件就可以通过 `props` 访问到父组件的数据／方法，这样就搭建起了父子组件间通信的桥梁。
 
 ```javascript
-var GroceryList = React.createClass({
-	handleClick: function(i) {
-		console.log('You clicked: ' + this.props.items[i]);
-	},
+import React, { Component } from 'react';
+import { render } from 'react-dom';
 
-	render: function() {
-		return (
-			<div>
-				{this.props.items.map(function(item, i) {
-					return (
-						<div onClick={this.handleClick.bind(this, i)} key={i}>{item}</div>
-					);
-				}, this)}
-			</div>
-		);
-	}
-});
+class GroceryList extends Component {
+  handleClick(i) {
+    console.log('You clicked: ' + this.props.items[i]);
+  }
 
-React.render(
-	<GroceryList items={['Apple', 'Banana', 'Cranberry']} />, mountNode
+  render() {
+    return (
+      <div>
+        {this.props.items.map((item, i) => {
+          return (
+            <div onClick={this.handleClick.bind(this, i)} key={i}>{item}</div>
+          );
+        })}
+      </div>
+    );
+  }
+}
+
+render(
+  <GroceryList items={['Apple', 'Banana', 'Cranberry']} />, mountNode
 );
 ```
 
 `div` 可以看作一个子组件，指定它的 `onClick` 事件调用父组件的方法。
-
-注意 `this.handleClick.bind(this, i)`
-给事件处理函数传递额外参数的方式：`bind(this, arg1, arg2, ...)`。
 
 父组件访问子组件？用 `refs`
 
@@ -48,3 +42,6 @@ React.render(
 UI。
 
 这种模式在复杂的系统里面可能会变得难以维护，所以看个人权衡是否将组件封装到大的组件，甚至整个页面或者应用就封装到一个组件。
+
+一般来说，对于比较复杂的应用，推荐使用类似 Flux 这种单项数据流架构，参见[Data
+Flow](data-flow.md)。

@@ -1,24 +1,30 @@
 一个简单的例子：
 
 ```javascript
-var LikeButton = React.createClass({
-	getInitialState: function() {
-		return {liked: false};
-	},
-	handleClick: function(event) {
-		this.setState({liked: !this.state.liked});
-	},
-	render: function() {
-		var text = this.state.liked ? 'like' : 'haven\'t liked';
-		return (
-			<p onClick={this.handleClick}>
-				You {text} this. Click to toggle.
-			</p>
-		);
-	}
-});
-React.render(
-	<LikeButton />,
-	document.getElementById('example')
+import React, { Component } from 'react';
+import { render } from 'react-dom';
+
+class LikeButton extends Component {
+  getInitialState() {
+    return { liked: false };
+  }
+
+  handleClick(e) {
+    this.setState({ liked: !this.state.liked });
+  }
+
+  render() {
+    const text = this.state.liked ? 'like' : 'haven\'t liked';
+    return (
+      <p onClick={this.handleClick.bind(this)}>
+          You {text} this. Click to toggle.
+      </p>
+    );
+  }
+}
+
+render(
+    <LikeButton />,
+    document.getElementById('example')
 );
 ```

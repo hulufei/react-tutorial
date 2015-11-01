@@ -1,13 +1,28 @@
 # 组件生命周期
 
-一个组件类必须由调用 `React.createClass` 创建，并且提供一个 `render`
-方法以及其他可选的生命周期函数、组件相关的事件或方法定义。
+一般来说，一个组件类由 `extends Component` 创建，并且提供一个 `render`
+方法以及其他可选的生命周期函数、组件相关的事件或方法来定义。
 
 {% include './share/simple-component.md' %}
 
 ## `getInitialState`
 
 初始化 `this.state` 的值，只在组件装载之前调用一次。
+
+如果是使用 ES6 的语法，你也可以在构造函数中初始化状态，比如：
+
+```javascript
+class Counter extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { count: props.initialCount };
+  }
+
+  render() {
+    // ...
+  }
+}
+```
 
 ## `getDefaultProps`
 
@@ -19,16 +34,22 @@
 在组件装载之后，这个方法缓存的结果会用来保证访问 `this.props` 的属性时，当这个属性没有在父组件中传入（在这个组件的 JSX
 属性里设置），也总是有值的。
 
+如果是使用 ES6 语法，可以直接定义 `defaultProps`
+这个类属性来替代，这样能更直观的知道 default props 是预先定义好的对象值：
+
+```javascript
+Counter.defaultProps = { initialCount: 0 };
+```
+
 ## `render`
 
 **必须**
 
-组装生成这个组件的 HTML 结构（使用原生 HTML 标签或者子组件），也可以返回 `null` 或者 `false`，这时候 React
-会将组件生成一个 `<noscript>` 标签，并且 `this.getDOMNode()` 会返回 `null`。
+组装生成这个组件的 HTML 结构（使用原生 HTML 标签或者子组件），也可以返回 `null` 或者 `false`，这时候 `ReactDOM.findDOMNode(this)` 会返回 `null`。
 
 ## 生命周期函数
 
-### 装载组件
+### 装载组件触发
 
 `componentWillMount`
 
@@ -38,9 +59,9 @@
 `componentDidMount`
 
 只会在装载完成之后调用一次，在 `render` 之后调用，从这里开始可以通过
-`this.getDOMNode()` 获取到组件的 DOM 节点。
+`ReactDOM.findDOMNode(this)` 获取到组件的 DOM 节点。
 
-### 更新组件状态
+### 更新组件触发
 
 这些方法不会在首次 `render` 组件的周期调用
 
@@ -49,7 +70,7 @@
 - `componentWillUpdate`
 - `componentDidUpdate`
 
-### 卸载（删除）组件
+### 卸载组件触发
 
 - `componentWillUnmount`
 

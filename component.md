@@ -39,3 +39,15 @@ _注意：组件生成的 HTML 结构只能有一个单一的根节点。_
 
 最后回过头来反复看几遍 [Thinking in
 React](http://facebook.github.io/react/docs/thinking-in-react.html)，相信会对组件有更深刻的认识。
+
+## 无状态组件
+
+你也可以用纯粹的函数来定义无状态的组件(stateless function)，这种组件没有状态，没有生命周期，只是简单的接受 props 渲染生成 DOM 结构。无状态组件非常简单，开销很低，如果可能的话尽量使用无状态组件。比如使用箭头函数定义：
+
+```javascript
+const HelloMessage = (props) => <div> Hello {props.name}</div>;
+render(<HelloMessage name="John" />, mountNode);
+```
+
+因为无状态组件只是函数，所以它没有实例返回，这点在想用 refs
+获取无状态组件的时候要注意，参见[DOM 操作](dom.md)。

@@ -38,13 +38,13 @@ Action -> Dispatcher -> Store -> View
 整个流程如下：
 
 - 首先要有 action，通过定义一些 _action creator_ 方法根据需要创建 Action 提供给 dispatcher
-- View 层通过用户交互会触发 Action
+- View 层通过用户交互（比如 onClick）会触发 Action
 - Dispatcher 会分发触发的 Action 给所有注册的 Store 的回调函数
 - Store 回调函数根据接收的 Action 更新自身数据之后会触发一个 _change_ 事件通知 View 数据更改了
 - View 会监听这个 _change_ 事件，拿到对应的新数据并调用 `setState` 更新组件 UI
 
 所有的状态都由 Store
-来维护，通过 Action 传递数据，构成了如上所述的单向数据流循环，所以应用中的各部分分工就相当明确，高度解耦了。 
+来维护，通过 Action 传递数据，构成了如上所述的单向数据流循环，所以应用中的各部分分工就相当明确，高度解耦了。
 
 这种单向数据流使得整个系统都是透明可预测的。
 
@@ -87,27 +87,27 @@ var AppDispatcher = require('../dispatcher/AppDispatcher');
 var TodoConstants = require('../constants/TodoConstants');
 
 var TodoActions = {
-	create: function(text) {
-		AppDispatcher.dispatch({
-			actionType: TodoConstants.TODO_CREATE,
-			text: text
-		});
-	},
+  create: function(text) {
+    AppDispatcher.dispatch({
+      actionType: TodoConstants.TODO_CREATE,
+      text: text
+    });
+  },
 
-	updateText: function(id, text) {
-		AppDispatcher.dispatch({
-			actionType: TodoConstants.TODO_UPDATE_TEXT,
-			id: id,
-			text: text
-		});
-	},
+  updateText: function(id, text) {
+    AppDispatcher.dispatch({
+      actionType: TodoConstants.TODO_UPDATE_TEXT,
+      id: id,
+      text: text
+    });
+  },
 
-	// 不带 payload 数据的动作
-	toggleCompleteAll: function() {
-		AppDispatcher.dispatch({
-			actionType: TodoConstants.TODO_TOGGLE_COMPLETE_ALL
-		});
-	}
+  // 不带 payload 数据的动作
+  toggleCompleteAll: function() {
+    AppDispatcher.dispatch({
+      actionType: TodoConstants.TODO_TOGGLE_COMPLETE_ALL
+    });
+  }
 };
 ```
 
@@ -116,7 +116,7 @@ Dispatcher.js，在这个简单的例子中没有提供什么额外的功能。`
 
 类似 `create`、`updateText` 就是 _action creator_，这两个动作会通过 View 上的用户交互触发（比如输入框）。 除了用户交互会创建动作，服务端接口调用也可以用来创建动作，比如通过 Ajax 请求的一些初始数据也可以创建动作提供给 dispatcher，再分发给 store 使用这些初始数据。
 
-> action creators are nothing more than a call into the dispatcher. 
+> action creators are nothing more than a call into the dispatcher.
 
 可以看到所谓动作就是用来封装传递数据的，动作只是一个简单的对象，包含两部分：payload（数据）和 type（类型），type 是一个字符串常量，用来标识动作。
 
@@ -137,54 +137,54 @@ var _todos = {};
 
 // 先定义一些数据处理方法
 function create(text) {
-	var id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
-	_todos[id] = {
-		id: id,
-		complete: false,
-		text: text
-	};
+  var id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
+  _todos[id] = {
+    id: id,
+    complete: false,
+    text: text
+  };
 }
 function update(id, updates) {
-	_todos[id] = assign({}, _todos[id], updates);
+  _todos[id] = assign({}, _todos[id], updates);
 }
 // ...
 
 var TodoStore = assign({}, EventEmitter.prototype, {
-	// Getter 方法暴露给外部获取 Store 数据
-	getAll: function() {
-		return _todos;
-	},
-	// 触发 change 事件
-	emitChange: function() {
-		this.emit(CHANGE_EVENT);
-	},
-	// 提供给外部 View 绑定 change 事件
-	addChangeListener: function(callback) {
-		this.on(CHANGE_EVENT, callback);
-	}
+  // Getter 方法暴露给外部获取 Store 数据
+  getAll: function() {
+    return _todos;
+  },
+  // 触发 change 事件
+  emitChange: function() {
+    this.emit(CHANGE_EVENT);
+  },
+  // 提供给外部 View 绑定 change 事件
+  addChangeListener: function(callback) {
+    this.on(CHANGE_EVENT, callback);
+  }
 });
 
 // 注册到 dispatcher，通过动作类型过滤处理当前 Store 关心的动作
 AppDispatcher.register(function(action) {
-	var text;
+  var text;
 
-	switch(action.actionType) {
-		case TodoConstants.TODO_CREATE:
-			text = action.text.trim();
-			if (text !== '') {
-				create(text);
-			}
-			TodoStore.emitChange();
-			break;
+  switch(action.actionType) {
+    case TodoConstants.TODO_CREATE:
+      text = action.text.trim();
+      if (text !== '') {
+        create(text);
+      }
+      TodoStore.emitChange();
+      break;
 
-		case TodoConstants.TODO_UPDATE_TEXT:
-			text = action.text.trim();
-			if (text !== '') {
-				update(action.id, {text: text});
-			}
-			TodoStore.emitChange();
-			break;
-	}
+    case TodoConstants.TODO_UPDATE_TEXT:
+      text = action.text.trim();
+      if (text !== '') {
+        update(action.id, {text: text});
+      }
+      TodoStore.emitChange();
+      break;
+  }
 });
 ```
 
@@ -204,33 +204,33 @@ var React = require('react');
 var TodoStore = require('../stores/TodoStore');
 
 function getTodoState() {
-	return {
-		allTodos: TodoStore.getAll(),
-		areAllComplete: TodoStore.areAllComplete()
-	};
+  return {
+    allTodos: TodoStore.getAll(),
+    areAllComplete: TodoStore.areAllComplete()
+  };
 }
 
 var TodoApp = React.createClass({
 
-	getInitialState: function() {
-		return getTodoState();
-	},
+  getInitialState: function() {
+    return getTodoState();
+  },
 
-	componentDidMount: function() {
-		TodoStore.addChangeListener(this._onChange);
-	},
+  componentDidMount: function() {
+    TodoStore.addChangeListener(this._onChange);
+  },
 
-	componentWillUnmount: function() {
-		TodoStore.removeChangeListener(this._onChange);
-	},
+  componentWillUnmount: function() {
+    TodoStore.removeChangeListener(this._onChange);
+  },
 
-	render: function() {
-		return <div>/*...*/</div>
-	},
+  render: function() {
+    return <div>/*...*/</div>
+  },
 
-	_onChange: function() {
-		this.setState(getTodoState());
-	}
+  _onChange: function() {
+    this.setState(getTodoState());
+  }
 });
 ```
 
