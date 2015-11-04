@@ -51,6 +51,10 @@ handleClick(e) {
 }
 ```
 
+详情见 [Event
+pooling](https://facebook.github.io/react/docs/events.html#event-pooling)
+说明。
+
 ## 参数传递
 
 给事件处理函数传递额外参数的方式：`bind(this, arg1, arg2, ...)`
