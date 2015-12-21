@@ -18,7 +18,11 @@ React 入门指南
   - [Mixins](mixin.md)
 - [Data Flow](data-flow.md)
   - [Flux](flux.md)
-  - [Redux]
+  - [Redux](redux.md)
+    - [进化 Flux](flux-evolution.md)
+    - [Redux 基础](redux-basic.md)
+    - [和 React 配合使用](usage-with-react.md)
+    - [Redux 进阶]
 - [表单](forms.md)
 - [动画]
 - [测试]
