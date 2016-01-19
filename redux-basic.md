@@ -170,7 +170,7 @@ reducer 函数处理并返回新的值。
 
 **3. Store 会保存 root reducer 返回的状态树**
 
-新的 State 会替代就的 State，然后所有 `store.subscribe(listener)`
+新的 State 会替代旧的 State，然后所有 `store.subscribe(listener)`
 注册的回调函数会被调用，在回调函数里面可以通过 `store.getState()` 拿到新的
 State。
 
