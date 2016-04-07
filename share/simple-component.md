@@ -5,7 +5,8 @@ import React, { Component } from 'react';
 import { render } from 'react-dom';
 
 class LikeButton extends Component {
-  constructor() {
+  constructor(props) {
+    super(props);
     this.state = { liked: false };
   }
 
