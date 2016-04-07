@@ -5,8 +5,8 @@ import React, { Component } from 'react';
 import { render } from 'react-dom';
 
 class LikeButton extends Component {
-  getInitialState() {
-    return { liked: false };
+  constructor() {
+    this.state = { liked: false };
   }
 
   handleClick(e) {
